@@ -1,1 +1,2 @@
-export const SERVER_ADDR = 'http://47.52.116.116:8083';
+export const SERVER_ADDR = 'http://localhost:8066';
+export default SERVER_ADDR;

@@ -1,12 +1,12 @@
 {
   "/visualize/*": {
-    "target": "http://re4cps.org:8082",
+    "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/analysis/*": {
-    "target": "http://re4cps.org:8082",
+    "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

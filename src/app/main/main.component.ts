@@ -17,6 +17,7 @@ import { DataTimeValue, Scenario, ScenesTree } from '../class/simulation';
 import { data } from 'jquery';
 import { from } from 'rxjs';
 import { InteractiveLayerAndRules } from '../class/output-style';
+import SERVER_ADDR from '../service/address';
 
 @Component({
   selector: 'app-main',
@@ -47,23 +48,21 @@ export class MainComponent implements OnInit {
   /////propertyFile
   propertyFileName: string = '';
 
-  address: string = 'http://47.52.116.116:8083/';
-
   environmentModel: EnvironmentModel | null = null;
 
   uploader: FileUploader = new FileUploader({
-    url: this.address + 'analysis/upload',
+    url: SERVER_ADDR + '/analysis/upload',
     method: 'POST',
     itemAlias: 'file',
   });
 
   modelUploader: FileUploader = new FileUploader({
-    url: this.address + 'analysis/upload',
+    url: SERVER_ADDR + '/analysis/upload',
     method: 'POST',
     itemAlias: 'file',
   });
   propertyUploader: FileUploader = new FileUploader({
-    url: this.address + 'analysis/upload',
+    url: SERVER_ADDR + '/analysis/upload',
     method: 'POST',
     itemAlias: 'file',
   });
@@ -497,7 +496,7 @@ export class MainComponent implements OnInit {
    */
 
   modelFileSubmit(event: any) {
-    var url = this.address + 'analysis/uploadModelFile';
+    var url = SERVER_ADDR + '/analysis/uploadModelFile';
     var formData = new FormData();
     formData.append('file', event.target.files[0]);
     this.initModelFileName = event.target.files[0].name;
@@ -548,7 +547,7 @@ export class MainComponent implements OnInit {
 
   instanceFileSubmit(event: any) {
     if (this.initModelFileName.indexOf('.xml') > 0) {
-      var url = this.address + 'analysis/uploadInstanceInformationFile';
+      var url = SERVER_ADDR + '/analysis/uploadInstanceInformationFile';
       var formData = new FormData();
       formData.append('file', event.target.files[0]);
       formData.append('modelLayer', JSON.stringify(this.modelLayer));
@@ -596,6 +595,7 @@ export class MainComponent implements OnInit {
   }
 
   generateInteractiveEnvironment() {
+    console.log('QAQ');
     if (this.modelLayer == null) {
       alert('Please upload the environment ontology file!');
     } else if (this.instanceLayer == null) {
@@ -685,9 +685,9 @@ export class MainComponent implements OnInit {
     this.showStaticResultOrIFD = 'ifd';
     var pngFileName =
       this.ifdFileName.substring(0, this.ifdFileName.indexOf('.dot')) + '.png';
-    var url = `http://47.52.116.116:8083/analysis/getIFDPng?pngFilePath=${
-      this.ifdAddress + pngFileName
-    }`;
+    var url =
+      SERVER_ADDR +
+      `/analysis/getIFDPng?pngFilePath=${this.ifdAddress + pngFileName}`;
 
     // console.log(this.ifdFileName)
     this.pngSrc = url;

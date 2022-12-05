@@ -18,6 +18,7 @@ import {
   LocationInput,
   SatisfactionInput,
 } from '../class/input-style';
+import SERVER_ADDR from './address';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +29,10 @@ export class SingleScenarioAnalysisService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
-  address: string = 'http://47.52.116.116:8083/';
 
   ///查看所有设备冲突
   searchSingleScenarioConflict(scenario: Scenario): Observable<Scenario> {
-    var url = this.address + `analysis/searchSingleScenarioConflict`;
+    var url = SERVER_ADDR + `/analysis/searchSingleScenarioConflict`;
     return this.http.post<Scenario>(url, scenario, this.httpOptions);
   }
 
@@ -48,7 +48,7 @@ export class SingleScenarioAnalysisService {
     locationInput.scenarios.push(scenario);
     locationInput.rules = rules;
     locationInput.ifdFileName = ifdFileName;
-    var url = this.address + `analysis/locateSingleScenariosAllConflict`;
+    var url = SERVER_ADDR + `/analysis/locateSingleScenariosAllConflict`;
     return this.http.post<Array<Array<Array<DeviceStateAndCausingRules>>>>(
       url,
       locationInput,
@@ -64,8 +64,8 @@ export class SingleScenarioAnalysisService {
     equivalentTime: string
   ): Observable<Scenario> {
     var url =
-      this.address +
-      `analysis/searchSingleScenarioJitter?intervalTime=${intervalTime}&simulationTime=${simulationTime}&equivalentTime=${equivalentTime}`;
+      SERVER_ADDR +
+      `/analysis/searchSingleScenarioJitter?intervalTime=${intervalTime}&simulationTime=${simulationTime}&equivalentTime=${equivalentTime}`;
     return this.http.post<Scenario>(url, scenario, this.httpOptions);
   }
 
@@ -81,7 +81,7 @@ export class SingleScenarioAnalysisService {
     locationInput.scenarios.push(scenario);
     locationInput.rules = rules;
     locationInput.ifdFileName = ifdFileName;
-    var url = this.address + `analysis/locateSingleScenariosAllJitter`;
+    var url = SERVER_ADDR + `/analysis/locateSingleScenariosAllJitter`;
     return this.http.post<Array<Array<Array<DeviceStateAndCausingRules>>>>(
       url,
       locationInput,
@@ -95,7 +95,7 @@ export class SingleScenarioAnalysisService {
       Array<Array<DeviceStateAndCausingRules>>
     >
   ): Observable<Array<Array<Array<DeviceStateAndCausingRules>>>> {
-    var url = this.address + `analysis/getCausingRulesSynthesized`;
+    var url = SERVER_ADDR + `/analysis/getCausingRulesSynthesized`;
     return this.http.post<Array<Array<Array<DeviceStateAndCausingRules>>>>(
       url,
       devicesAllStatesRuleAndPreRules,
@@ -112,7 +112,7 @@ export class SingleScenarioAnalysisService {
     consumptionInput.dataTimeValue = dataTimeValue;
     consumptionInput.deviceInstance = deviceInstance;
 
-    var url = this.address + `analysis/calculateDeviceStatesDuration`;
+    var url = SERVER_ADDR + `/analysis/calculateDeviceStatesDuration`;
     return this.http.post<Array<Array<string>>>(
       url,
       consumptionInput,
@@ -133,7 +133,7 @@ export class SingleScenarioAnalysisService {
       highValue: highValue,
       dataTimeValues: dataTimeValues,
     };
-    var url = this.address + `analysis/getAttributeSatisfaction`;
+    var url = SERVER_ADDR + `/analysis/getAttributeSatisfaction`;
     return this.http.post<number>(url, satisfactionInput, this.httpOptions);
   }
 
@@ -146,7 +146,7 @@ export class SingleScenarioAnalysisService {
       dataTimeValues: dataTimeValues,
       deviceInstances: deviceInstances,
     };
-    var url = this.address + `analysis/getEnergyConsumption`;
+    var url = SERVER_ADDR + `/analysis/getEnergyConsumption`;
     return this.http.post<Array<Array<string>>>(
       url,
       energyConsumptionInput,

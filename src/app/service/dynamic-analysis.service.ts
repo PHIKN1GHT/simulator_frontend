@@ -26,6 +26,7 @@ import {
   PropertyAnalysisInput,
 } from '../class/input-style';
 import { OtherAnalysisOutput } from '../class/output-style';
+import SERVER_ADDR from './address';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,6 @@ export class DynamicAnalysisService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
-  address: string = 'http://47.52.116.116:8083/';
 
   getPropertiesAnalysis(
     scenarios: Array<Scenario>,
@@ -49,7 +49,7 @@ export class DynamicAnalysisService {
       properties: properties,
       instanceLayer: instanceLayer,
     };
-    var url = this.address + `analysis/getPropertiesAnalysis`;
+    var url = SERVER_ADDR + `/analysis/getPropertiesAnalysis`;
     return this.http.post<Array<PropertyAnalysisResult>>(
       url,
       propertyAnalysisInput,
@@ -60,7 +60,7 @@ export class DynamicAnalysisService {
   searchAllScenariosConflict(
     scenarios: Array<Scenario>
   ): Observable<Array<Scenario>> {
-    var url = this.address + `analysis/searchAllScenariosConflict`;
+    var url = SERVER_ADDR + `/analysis/searchAllScenariosConflict`;
     return this.http.post<Array<Scenario>>(url, scenarios, this.httpOptions);
   }
 
@@ -71,8 +71,8 @@ export class DynamicAnalysisService {
     equivalentTime: string
   ): Observable<Array<Scenario>> {
     var url =
-      this.address +
-      `analysis/searchAllScenariosJitter?intervalTime=${intervalTime}&simulationTime=${simulationTime}&equivalentTime=${equivalentTime}`;
+      SERVER_ADDR +
+      `/analysis/searchAllScenariosJitter?intervalTime=${intervalTime}&simulationTime=${simulationTime}&equivalentTime=${equivalentTime}`;
     return this.http.post<Array<Scenario>>(url, scenarios, this.httpOptions);
   }
 
@@ -87,7 +87,7 @@ export class DynamicAnalysisService {
     locationInput.scenarios = scenarios;
     locationInput.rules = rules;
     locationInput.ifdFileName = ifdFileName;
-    var url = this.address + `analysis/locateAllScenariosConflict`;
+    var url = SERVER_ADDR + `/analysis/locateAllScenariosConflict`;
     return this.http.post<Array<Array<Array<DeviceStateAndCausingRules>>>>(
       url,
       locationInput,
@@ -106,7 +106,7 @@ export class DynamicAnalysisService {
     locationInput.scenarios = scenarios;
     locationInput.rules = rules;
     locationInput.ifdFileName = ifdFileName;
-    var url = this.address + `analysis/locateAllScenariosJitter`;
+    var url = SERVER_ADDR + `/analysis/locateAllScenariosJitter`;
     return this.http.post<Array<Array<Array<DeviceStateAndCausingRules>>>>(
       url,
       locationInput,
@@ -122,7 +122,7 @@ export class DynamicAnalysisService {
       scenarios: scenarios,
       instanceLayer: instanceLayer,
     };
-    var url = this.address + `analysis/getOtherAnalysis`;
+    var url = SERVER_ADDR + `/analysis/getOtherAnalysis`;
     return this.http.post<OtherAnalysisOutput>(
       url,
       otherAnalysisInput,
@@ -145,8 +145,8 @@ export class DynamicAnalysisService {
       rules: rules,
     };
     var url =
-      this.address +
-      `analysis/generateAllScenarioModels?initModelFileName=${initModelFileName}&simulationTime=${simulationTime}`;
+      SERVER_ADDR +
+      `/analysis/generateAllScenarioModels?initModelFileName=${initModelFileName}&simulationTime=${simulationTime}`;
     return this.http.post<ScenesTree>(url, environmentRule, this.httpOptions);
   }
 
@@ -160,8 +160,8 @@ export class DynamicAnalysisService {
       scenesTree: scenesTree,
     };
     var url =
-      this.address +
-      `analysis/simulateAllScenarioModels?initModelFileName=${initModelFileName}`;
+      SERVER_ADDR +
+      `/analysis/simulateAllScenarioModels?initModelFileName=${initModelFileName}`;
     return this.http.post<Array<Scene>>(url, sceneTreeDevice, this.httpOptions);
   }
 
@@ -181,8 +181,8 @@ export class DynamicAnalysisService {
       rules: rules,
     };
     var url =
-      this.address +
-      `analysis/getAllDynamicAnalysisResult?simulationTime=${simulationTime}&equivalentTime=${equivalentTime}&intervalTime=${intervalTime}`;
+      SERVER_ADDR +
+      `/analysis/getAllDynamicAnalysisResult?simulationTime=${simulationTime}&equivalentTime=${equivalentTime}&intervalTime=${intervalTime}`;
     return this.http.post<Array<Scene>>(
       url,
       sceneEnvironmentProperty,
@@ -202,7 +202,7 @@ export class DynamicAnalysisService {
       properties: properties,
       rules: rules,
     };
-    var url = this.address + `analysis/getPropertyVerificationResult`;
+    var url = SERVER_ADDR + `/analysis/getPropertyVerificationResult`;
     return this.http.post<Array<PropertyVerifyResult>>(
       url,
       sceneEnvironmentProperty,
@@ -224,8 +224,8 @@ export class DynamicAnalysisService {
       rules: rules,
     };
     var url =
-      this.address +
-      `analysis/getSingleDynamicAnalysisResult?simulationTime=${simulationTime}&equivalentTime=${equivalentTime}&intervalTime=${intervalTime}`;
+      SERVER_ADDR +
+      `/analysis/getSingleDynamicAnalysisResult?simulationTime=${simulationTime}&equivalentTime=${equivalentTime}&intervalTime=${intervalTime}`;
     return this.http.post<Scene>(url, sceneEnvironmentRule, this.httpOptions);
   }
 
@@ -240,8 +240,8 @@ export class DynamicAnalysisService {
       rules: rules,
     };
     var url =
-      this.address +
-      `analysis/generateBestScenarioModelAndSimulate?initModelFileName=${initModelFileName}&simulationTime=${simulationTime}`;
+      SERVER_ADDR +
+      `/analysis/generateBestScenarioModelAndSimulate?initModelFileName=${initModelFileName}&simulationTime=${simulationTime}`;
     return this.http.post<Scene>(url, environmentRule, this.httpOptions);
   }
 }

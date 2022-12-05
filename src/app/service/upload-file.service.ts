@@ -8,13 +8,14 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FileUploader } from 'ng2-file-upload';
+import SERVER_ADDR from './address';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UploadFileService {
   public uploader: FileUploader = new FileUploader({
-    url: 'http://47.52.116.116:8083/analysis/upload',
+    url: SERVER_ADDR + '/analysis/upload',
     method: 'POST',
     itemAlias: 'file',
   });

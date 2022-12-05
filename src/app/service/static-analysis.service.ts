@@ -5,6 +5,7 @@ import { EnvironmentStatic } from '../class/scene';
 import { Rule, StaticAnalysisResult } from '../class/rule';
 import { InstanceLayer } from '../class/instance';
 import { StaticAnalysisInput } from '../class/input-style';
+import SERVER_ADDR from './address';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,12 +15,11 @@ export class StaticAnalysisService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
-  address: string = 'http://47.52.116.116:8083/';
 
   getIFDPng(ifdFileName: string): Observable<Array<string>> {
     var fileNames = new Array<string>();
     fileNames.push(ifdFileName);
-    var url = this.address + `analysis/getIFDPng`;
+    var url = SERVER_ADDR + `/analysis/getIFDPng`;
     return this.http.post<Array<string>>(url, fileNames, this.httpOptions);
   }
 
@@ -38,8 +38,8 @@ export class StaticAnalysisService {
     }
 
     var url =
-      this.address +
-      `analysis/getStaticAnalysisResult?initModelFileName=${initModelFileName}&propertyFileName=${propertyFileName}`;
+      SERVER_ADDR +
+      `/analysis/getStaticAnalysisResult?initModelFileName=${initModelFileName}&propertyFileName=${propertyFileName}`;
     return this.http.post<EnvironmentStatic>(
       url,
       ruleTextLines,
@@ -55,7 +55,7 @@ export class StaticAnalysisService {
       rules: rules,
       instanceLayer: interactiveEnvironment,
     };
-    var url = this.address + `analysis/getStaticAnalysis`;
+    var url = SERVER_ADDR + `/analysis/getStaticAnalysis`;
     return this.http.post<StaticAnalysisResult>(
       url,
       staticAnalysisInput,

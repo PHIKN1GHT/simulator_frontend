@@ -16,6 +16,7 @@ import {
 } from '../class/input-style';
 import { Rule } from '../class/rule';
 import { DataTimeValue, Scenario, ScenesTree } from '../class/simulation';
+import SERVER_ADDR from './address';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,6 @@ export class ModelGenerateService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
-  address: string = 'http://47.52.116.116:8083/';
 
   ///生成交互环境模型
   genererateInteractiveEnvironment(
@@ -47,7 +47,7 @@ export class ModelGenerateService {
     modelInstanceAndRuleStrs.instanceLayer = instanceLayer;
     modelInstanceAndRuleStrs.ruleTestLines = ruleTextLines;
 
-    var url = this.address + `analysis/genererateInteractiveEnvironment`;
+    var url = SERVER_ADDR + `/analysis/genererateInteractiveEnvironment`;
     return this.http.post<InteractiveLayerAndRules>(
       url,
       modelInstanceAndRuleStrs,
@@ -73,7 +73,7 @@ export class ModelGenerateService {
     singleScenarioGenerateInput.simulationTime = simulationTime;
     singleScenarioGenerateInput.attributeValues = attributeValues;
     singleScenarioGenerateInput.rules = rules;
-    var url = this.address + `analysis/generateSingleScenario`;
+    var url = SERVER_ADDR + `/analysis/generateSingleScenario`;
     return this.http.post<Array<string>>(
       url,
       singleScenarioGenerateInput,
@@ -100,7 +100,7 @@ export class ModelGenerateService {
       simulationTime: simulationTime,
       ifdFileName: ifdFileName,
     };
-    var url = this.address + `analysis/generateBestScenario`;
+    var url = SERVER_ADDR + `/analysis/generateBestScenario`;
     return this.http.post<BestScenarioOutput>(
       url,
       bestScenarioGenerateInput,
@@ -114,8 +114,8 @@ export class ModelGenerateService {
     instanceLayer: InstanceLayer
   ): Observable<Scenario> {
     var url =
-      this.address +
-      `analysis/simulateSingleScenario?modelFileName=${modelFileName}`;
+      SERVER_ADDR +
+      `/analysis/simulateSingleScenario?modelFileName=${modelFileName}`;
     return this.http.post<Scenario>(url, instanceLayer, this.httpOptions);
   }
 
@@ -135,7 +135,7 @@ export class ModelGenerateService {
     multiScenarioGenerateInput.interactiveInstance = interactiveInstance;
     multiScenarioGenerateInput.simulationTime = simulationTime;
     multiScenarioGenerateInput.rules = rules;
-    var url = this.address + `analysis/genereteMultipleScenarios`;
+    var url = SERVER_ADDR + `/analysis/genereteMultipleScenarios`;
     return this.http.post<ScenesTree>(
       url,
       multiScenarioGenerateInput,
@@ -153,7 +153,7 @@ export class ModelGenerateService {
     multiScenarioSimulateInput.instanceLayer = instanceLayer;
     multiScenarioSimulateInput.modelFileName = modelFileName;
     multiScenarioSimulateInput.scenesTree = scenesTree;
-    var url = this.address + `analysis/simulateMultipleScenario`;
+    var url = SERVER_ADDR + `/analysis/simulateMultipleScenario`;
     return this.http.post<Array<Scenario>>(
       url,
       multiScenarioSimulateInput,

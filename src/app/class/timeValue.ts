@@ -1,5 +1,4 @@
-export interface DataTimeValue{
-    ruleName:string,
-    timeValues:Array<number[]>,
+export interface DataTimeValue {
+  ruleName: string;
+  timeValues: Array<number[]>;
 }
-

@@ -1,5 +1,4 @@
-export interface SceneRule{
-    sceneName:string,
-    triggeredRules:string[]
-
+export interface SceneRule {
+  sceneName: string;
+  triggeredRules: string[];
 }

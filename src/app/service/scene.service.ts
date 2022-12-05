@@ -1,132 +1,137 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { observable, Observable, of } from 'rxjs';
-import { AllCauseRuleInput, AllScenesAnalysisInput, CauseRuleInput, ConflictTime, DeviceStateName, RulesAllScenesSimulationTime, RulesSceneSimulationTime, Scene, StateAndRuleAndCauseRule, StateChangeCauseRuleInput, StateChangeCauseRules, StateChangeFast, StaticAnalysisResult, WholeAndCurrentChangeCauseRule } from '../class/scene';
+import {
+  AllCauseRuleInput,
+  AllScenesAnalysisInput,
+  CauseRuleInput,
+  ConflictTime,
+  DeviceStateName,
+  RulesAllScenesSimulationTime,
+  RulesSceneSimulationTime,
+  Scene,
+  StateAndRuleAndCauseRule,
+  StateChangeCauseRuleInput,
+  StateChangeCauseRules,
+  StateChangeFast,
+  StaticAnalysisResult,
+  WholeAndCurrentChangeCauseRule,
+} from '../class/scene';
 import { ScenesTree } from '../class/scenes-tree';
 import * as echarts from 'echarts';
 import { DataTimeValue, Scenario } from '../class/simulation';
 import { Rule } from '../class/rule';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SceneService {
-
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient) {}
 
   httpOptions = {
-  	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  
+  getScenesRulesData(scenes: Array<Scene>, rules: Array<Rule>) {
+    return new Observable((observer) => {
+      setTimeout(() => {
+        var length = scenes.length;
+        var xAxisData = [];
+        var ruleNumsData = [];
+        // var max1:number=0;
+        // var max2:number=0;
+        // if(scenes[0].triggeredRulesName.length>0){
+        //   max1=parseInt(scenes[0].triggeredRulesName[scenes[0].triggeredRulesName.length-1].name.substring("rule".length));
+        // }
+        // if(scenes[0].cannotTriggeredRulesName.length>0){
+        //   max2=parseInt(scenes[0].cannotTriggeredRulesName[scenes[0].cannotTriggeredRulesName.length-1].substring("rule".length));
+        // }
+        const yMax = rules.length;
+        // const yMax = scenes[0].triggeredRulesName.length+scenes[0].cannotTriggeredRulesName.length;
+        var dataShadow = [];
+        for (let i = 0; i < length; i++) {
+          var scene = scenes[i];
+          // var sceneIndex=scene.scenarioName.indexOf("scenario-");
+          // var sceneName=scene.scenarioName.substr(sceneIndex);
+          xAxisData.push(
+            's-' + scene.scenarioName.substring('scenario-'.length)
+          );
+          var sceneRuleNum = scene.triggeredRulesName.length;
+          ruleNumsData.push(sceneRuleNum);
+          dataShadow.push(yMax);
+        }
 
+        // tslint:disable-next-line: prefer-for-of
 
-
-  getScenesRulesData(scenes: Array<Scene>,rules:Array<Rule>){
-    return new Observable((observer)=>{
-      setTimeout(()=>{
-
-          var length=scenes.length;
-          var xAxisData=[];
-          var ruleNumsData=[];
-          // var max1:number=0;
-          // var max2:number=0;
-          // if(scenes[0].triggeredRulesName.length>0){
-          //   max1=parseInt(scenes[0].triggeredRulesName[scenes[0].triggeredRulesName.length-1].name.substring("rule".length));
-          // }
-          // if(scenes[0].cannotTriggeredRulesName.length>0){
-          //   max2=parseInt(scenes[0].cannotTriggeredRulesName[scenes[0].cannotTriggeredRulesName.length-1].substring("rule".length));
-          // }
-          const yMax=rules.length;
-          // const yMax = scenes[0].triggeredRulesName.length+scenes[0].cannotTriggeredRulesName.length;
-          var dataShadow = [];
-          for(let i=0;i<length;i++){
-            var scene=scenes[i];
-            // var sceneIndex=scene.scenarioName.indexOf("scenario-");
-            // var sceneName=scene.scenarioName.substr(sceneIndex);
-            xAxisData.push("s-"+scene.scenarioName.substring("scenario-".length));
-            var sceneRuleNum=scene.triggeredRulesName.length;
-            ruleNumsData.push(sceneRuleNum);
-            dataShadow.push(yMax);
-          }
-          
-      
-          // tslint:disable-next-line: prefer-for-of
-         
-      
-          var options = {
-            title: {
-              text:"Triggered Rules Number",
-               x:"center"
+        var options = {
+          title: {
+            text: 'Triggered Rules Number',
+            x: 'center',
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b} triggered {c} rules',
+          },
+          xAxis: {
+            data: xAxisData,
+            // name:"scene's name",
+            // nameLocation:'center',
+            axisLabel: {},
+            axisTick: {
+              show: false,
             },
-            tooltip:{
-              trigger:'item',
-              formatter: '{b} triggered {c} rules'
+            axisLine: {
+              show: false,
             },
-            xAxis: {
-              data: xAxisData,
-              // name:"scene's name",
-              // nameLocation:'center',
-              axisLabel: {
-                
-              },
-              axisTick: {
-                show: false,
-              },
-              axisLine: {
-                show: false,
-              },
-              z: 10,
+            z: 10,
+          },
+          yAxis: {
+            axisLine: {
+              show: false,
             },
-            yAxis: {
-              axisLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-              axisLabel: {
-                textStyle: {
-                  color: '#999',
-                },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#999',
               },
             },
-            dataZoom: [
-              {
-                type: 'inside',
+          },
+          dataZoom: [
+            {
+              type: 'inside',
+            },
+          ],
+          series: [
+            {
+              // For shadow
+              type: 'bar',
+              itemStyle: {
+                color: 'rgba(0,0,0,0.05)',
               },
-            ],
-            series: [
-              {
-                // For shadow
-                type: 'bar',
+              barGap: '-100%',
+              barCategoryGap: '40%',
+              data: dataShadow,
+              animation: false,
+            },
+            {
+              type: 'bar',
+              itemStyle: {
+                color: 'rgba(30, 144 ,255,0.8)',
+              },
+              emphasis: {
                 itemStyle: {
-                  color: 'rgba(0,0,0,0.05)'
+                  color: 'rgba(0, 0, 205,0.9)',
                 },
-                barGap: '-100%',
-                barCategoryGap: '40%',
-                data: dataShadow,
-                animation: false,
               },
-              {
-                type: 'bar',
-                itemStyle: {
-                  color: 'rgba(30, 144 ,255,0.8)',
-                },
-                emphasis: {
-                  itemStyle: {
-                    color: 'rgba(0, 0, 205,0.9)',
-                  }
-                },
-                data:ruleNumsData,
-              },
-            ],
-          };
-          observer.next(options);
-        
-        
-      })
-    })
+              data: ruleNumsData,
+            },
+          ],
+        };
+        observer.next(options);
+      });
+    });
   }
 
   // getRulesScenesData(scenes: Array<Scene>,staticAnalysisResult:StaticAnalysisResult) {
@@ -135,7 +140,6 @@ export class SceneService {
 
   //       console.log(scenes)
   //       var rules=staticAnalysisResult.totalRules;
-
 
   //       var xAxisData = [];
   //       var triggeredSceneNum:number[] = [];
@@ -151,7 +155,7 @@ export class SceneService {
   //       var triggeredNumMax = scenes.length;
   //       var dataShadow = [];
   //       for (let i = 0; i < ruleNum; i++) {
-          
+
   //         var triggeredNum = 0;
   //         /////规则名为横坐标
   //         xAxisData.push(rules[i].ruleName);
@@ -170,7 +174,6 @@ export class SceneService {
   //         dataShadow.push(triggeredNumMax);
   //       }
 
-
   //       // tslint:disable-next-line: prefer-for-of
   //       var options = {
   //         title: {
@@ -186,7 +189,7 @@ export class SceneService {
   //             name=params.name;
   //             var ruleNum=parseInt(name.substring('rule'.length));
   //             // if(params.componentIndex===1){
-                
+
   //             //   data=params.data;
   //             // }else{
   //             //   data=scenes.length-params.data;
@@ -261,15 +264,12 @@ export class SceneService {
   //         ],
   //       };
 
-        
   //       observer.next(options);
-
 
   //     })
 
   //   })
   // }
-
 
   // getRuleTimeValueData(scene: Scene) {
 
@@ -287,223 +287,225 @@ export class SceneService {
   //     }, 500)
   //   })
   // }
-  getRulesEchartsOption(scenario: Scenario,simulationTime:string,rules:Array<Rule>) {
+  getRulesEchartsOption(
+    scenario: Scenario,
+    simulationTime: string,
+    rules: Array<Rule>
+  ) {
     return new Observable((observer) => {
       setTimeout(() => {
         var rulesTimeValue: DataTimeValue[] = [];
-        for (let i = 0; i<scenario.dataTimeValues.length; i++) {
+        for (let i = 0; i < scenario.dataTimeValues.length; i++) {
           var dataTimeValue = scenario.dataTimeValues[i];
-          if (dataTimeValue.dataName.indexOf("rule") >= 0) {
+          if (dataTimeValue.dataName.indexOf('rule') >= 0) {
             rulesTimeValue.push(dataTimeValue);
           }
         }
         var length = rulesTimeValue.length;
         var data = [];
-        var categories = [];   ///y轴
+        var categories = []; ///y轴
         var colors = [];
-        console.log(rulesTimeValue)
+        console.log(rulesTimeValue);
 
         for (let i = 0; i < length; i++) {
           categories.push(rulesTimeValue[i].dataName);
-          colors.push('rgb(' + [
-            Math.round(Math.random() * 255),
-            Math.round(Math.random() * 255),
-            Math.round(Math.random() * 255)
-          ].join(',') + ')');
+          colors.push(
+            'rgb(' +
+              [
+                Math.round(Math.random() * 255),
+                Math.round(Math.random() * 255),
+                Math.round(Math.random() * 255),
+              ].join(',') +
+              ')'
+          );
         }
 
         ///计算该规则触发的时间段，开始、结束时间点
         for (let i = 0; i < length; i++) {
-
           var len = rulesTimeValue[i].timeValues.length;
 
           var startTime = 0;
           var endTime = 0;
 
-          for (let j = 0; j < len;) {
+          for (let j = 0; j < len; ) {
             if (j < len - 1) {
               if (rulesTimeValue[i].timeValues[j][1] > 0) {
                 var k = j + 1;
-                for (; k < len;) {
+                for (; k < len; ) {
                   if (!(rulesTimeValue[i].timeValues[k][1] > 0)) {
                     startTime = rulesTimeValue[i].timeValues[j][0];
                     endTime = rulesTimeValue[i].timeValues[k - 1][0];
-                    data.push(
-                      {
-                        name: rulesTimeValue[i].dataName,
-                        value: [
-                          i,
-                          startTime,
-                          endTime,
-                          endTime - startTime
-                        ],
-                        itemStyle: {
-                          normal: {
-                            color: colors[i]
-                          }
-                        }
-                      }
-                    );
-
+                    data.push({
+                      name: rulesTimeValue[i].dataName,
+                      value: [i, startTime, endTime, endTime - startTime],
+                      itemStyle: {
+                        normal: {
+                          color: colors[i],
+                        },
+                      },
+                    });
 
                     break;
                   } else {
-                    
-
                     k++;
                   }
                 }
-                if(k===len){
+                if (k === len) {
                   startTime = rulesTimeValue[i].timeValues[j][0];
-                    endTime = rulesTimeValue[i].timeValues[k - 1][0];
-                    data.push(
-                      {
-                        name: rulesTimeValue[i].dataName,
-                        value: [
-                          i,
-                          startTime,
-                          endTime,
-                          endTime - startTime
-                        ],
-                        itemStyle: {
-                          normal: {
-                            color: colors[i]
-                          }
-                        }
-                      }
-                    );
+                  endTime = rulesTimeValue[i].timeValues[k - 1][0];
+                  data.push({
+                    name: rulesTimeValue[i].dataName,
+                    value: [i, startTime, endTime, endTime - startTime],
+                    itemStyle: {
+                      normal: {
+                        color: colors[i],
+                      },
+                    },
+                  });
                 }
                 j = k;
               } else {
                 j++;
-
               }
-
             } else {
               if (rulesTimeValue[i].timeValues[j][1] > 0) {
                 startTime = rulesTimeValue[i].timeValues[j][0];
                 endTime = rulesTimeValue[i].timeValues[j][0];
-                data.push(
-                  {
-                    name: rulesTimeValue[i].dataName,
-                    value: [
-                      i,
-                      startTime,
-                      endTime,
-                      endTime - startTime
-                    ],
-                    // itemStyle:{
-                    //     normal:{
-                    //         color:
-                    //     }
-                    // }
-                  }
-                )
-
+                data.push({
+                  name: rulesTimeValue[i].dataName,
+                  value: [i, startTime, endTime, endTime - startTime],
+                  // itemStyle:{
+                  //     normal:{
+                  //         color:
+                  //     }
+                  // }
+                });
               }
               j++;
             }
-
-
           }
         }
-        function renderItem(params: { coordSys: { x: any; y: any; width: any; height: any; }; }, api: { value: (arg0: number) => any; coord: (arg0: any[]) => any; size: (arg0: number[]) => number[]; style: () => any; }) {
+        function renderItem(
+          params: { coordSys: { x: any; y: any; width: any; height: any } },
+          api: {
+            value: (arg0: number) => any;
+            coord: (arg0: any[]) => any;
+            size: (arg0: number[]) => number[];
+            style: () => any;
+          }
+        ) {
           var categoryIndex = api.value(0);
           var start = api.coord([api.value(1), categoryIndex]);
           var end = api.coord([api.value(2), categoryIndex]);
           var height = api.size([0, 1])[1] * 0.5;
           const ec = echarts as any;
-          var rectShape = echarts.graphic.clipRectByRect({
-            x: start[0],
-            y: start[1] - height / 2,
-            width: end[0] - start[0],
-            height: height
-          }, {
-            x: params.coordSys.x,
-            y: params.coordSys.y,
-            width: params.coordSys.width,
-            height: params.coordSys.height
-          });
+          var rectShape = echarts.graphic.clipRectByRect(
+            {
+              x: start[0],
+              y: start[1] - height / 2,
+              width: end[0] - start[0],
+              height: height,
+            },
+            {
+              x: params.coordSys.x,
+              y: params.coordSys.y,
+              width: params.coordSys.width,
+              height: params.coordSys.height,
+            }
+          );
 
-          return rectShape && {
-            type: 'rect',
-            shape: rectShape,
-            style: api.style()
-          };
+          return (
+            rectShape && {
+              type: 'rect',
+              shape: rectShape,
+              style: api.style(),
+            }
+          );
         }
 
-        function getRuleContent(ruleName:string,rules:Array<Rule>):string{
-          var content=""
-          for(let i=0;i<rules.length;i++){
-            if(ruleName===rules[i].ruleName){
-              content=rules[i].ruleContent
+        function getRuleContent(ruleName: string, rules: Array<Rule>): string {
+          var content = '';
+          for (let i = 0; i < rules.length; i++) {
+            if (ruleName === rules[i].ruleName) {
+              content = rules[i].ruleContent;
             }
           }
-          return content
+          return content;
         }
-
 
         var options = {
           tooltip: {
             formatter: function (params: any) {
-              return params.marker + params.name + ' last time : ' + Number(params.value[3]).toFixed(2)+'<br/>'+getRuleContent(params.name,rules);
-            }
+              return (
+                params.marker +
+                params.name +
+                ' last time : ' +
+                Number(params.value[3]).toFixed(2) +
+                '<br/>' +
+                getRuleContent(params.name, rules)
+              );
+            },
           },
           title: {
             text: 'Rules Triggering over Time',
-            left: 'center'
+            left: 'center',
           },
-          dataZoom: [{
-            type: 'inside',
-            filterMode: 'none',
-            showDataShadow: false,
-            top: 400,
-            height: 100,
-            borderColor: 'transparent',
-            backgroundColor: '#e2e2e2',
-            handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
-            handleSize: 20,
-            handleStyle: {
-              shadowBlur: 6,
-              shadowOffsetX: 1,
-              shadowOffsetY: 2,
-              shadowColor: '#aaa'
+          dataZoom: [
+            {
+              type: 'inside',
+              filterMode: 'none',
+              showDataShadow: false,
+              top: 400,
+              height: 100,
+              borderColor: 'transparent',
+              backgroundColor: '#e2e2e2',
+              handleIcon:
+                'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
+              handleSize: 20,
+              handleStyle: {
+                shadowBlur: 6,
+                shadowOffsetX: 1,
+                shadowOffsetY: 2,
+                shadowColor: '#aaa',
+              },
+              labelFormatter: '',
             },
-            labelFormatter: ''
-          }, {
-            type: 'inside',
-            filterMode: 'weakFilter'
-          },{
-            type: 'slider',
-            yAxisIndex: 0,
-            zoomLock: true,
-            width: 10,
-            right: 10,
-            top: 70,
-            bottom: 70,
-            start: 0,
-            end: 50,
-            handleSize: 0,
-            showDetail: false
-          },
-          {
-            type: 'inside',
-            id: 'insideY',
-            yAxisIndex: 0,
-            start: 0,
-            end: 150,
-            zoomOnMouseWheel: false,
-            moveOnMouseMove: true,
-            moveOnMouseWheel: true
-          }],
-          
+            {
+              type: 'inside',
+              filterMode: 'weakFilter',
+            },
+            {
+              type: 'slider',
+              yAxisIndex: 0,
+              zoomLock: true,
+              width: 10,
+              right: 10,
+              top: 70,
+              bottom: 70,
+              start: 0,
+              end: 50,
+              handleSize: 0,
+              showDetail: false,
+            },
+            {
+              type: 'inside',
+              id: 'insideY',
+              yAxisIndex: 0,
+              start: 0,
+              end: 150,
+              zoomOnMouseWheel: false,
+              moveOnMouseMove: true,
+              moveOnMouseWheel: true,
+            },
+          ],
+
           xAxis: {
             show: true,
             min: 0,
-            max:Number(simulationTime),
+            max: Number(simulationTime),
             scale: true,
             position: 'bottom',
-            name:"time/s",
+            name: 'time/s',
             // axisLabel: {
             //   formatter: function (val: number) {
             //     return Math.max(0, val - 0);
@@ -511,89 +513,101 @@ export class SceneService {
             // }
             splitLine: {
               lineStyle: {
-                color: ['#E9EDFF']
-              }
+                color: ['#E9EDFF'],
+              },
             },
             axisLine: {
-              show: true
+              show: true,
             },
             axisTick: {
               lineStyle: {
-                color: '#929ABA'
-              }
+                color: '#929ABA',
+              },
             },
             axisLabel: {
               color: '#929ABA',
               inside: false,
-              align: 'center'
-            }
-            
+              align: 'center',
+            },
           },
           yAxis: {
-            inverse:false, //是否是反向坐标轴
+            inverse: false, //是否是反向坐标轴
             data: categories,
-            
-            name: "rule"
+
+            name: 'rule',
           },
-          series: [{
-            type: 'custom',
-            renderItem: renderItem,
-            itemStyle: {
-              opacity: 0.7
+          series: [
+            {
+              type: 'custom',
+              renderItem: renderItem,
+              itemStyle: {
+                opacity: 0.7,
+              },
+              encode: {
+                x: [1, 2],
+                y: 0,
+              },
+              data: data,
             },
-            encode: {
-              x: [1, 2],
-              y: 0
-            },
-            data: data
-          }]
+          ],
         };
 
         observer.next(options);
-      })
-    })
+      });
+    });
   }
 
-  getRuleBarEchartOption(scene:Scene){
-    return new Observable((observer)=>{
+  getRuleBarEchartOption(scene: Scene) {
+    return new Observable((observer) => {
       setTimeout(() => {
-        var sceneIndex=scene.scenarioName.indexOf("scene");
-        var sceneName=scene.scenarioName.substr(sceneIndex);
+        var sceneIndex = scene.scenarioName.indexOf('scene');
+        var sceneName = scene.scenarioName.substr(sceneIndex);
         console.log(sceneName);
         var rulesBarOptions = {
           title: {
             text: 'Triggered Rules',
             x: 'center',
-            top: 'top'
+            top: 'top',
           },
-    
+
           tooltip: {
             trigger: 'axis',
-            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-              type: 'none'        // 默认为直线，可选为：'line' | 'shadow'
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: 'none', // 默认为直线，可选为：'line' | 'shadow'
             },
-            formatter:function(params:any){
-              var triggered=params[0].marker+"triggered rules number: <b>"+params[0].data+"</b><br>";
-              var notTriggered=params[1].marker+"cannot triggered rules number: <b>"+params[1].data+"</b><br>";
-              var cannotTriggeredRules="&nbsp;&nbsp; cannot triggered rules:";
-              for(let i=0;i<scene.cannotTriggeredRulesName.length;i++){
-                cannotTriggeredRules=cannotTriggeredRules+"<br>&nbsp;&nbsp;&nbsp;&nbsp;"+scene.cannotTriggeredRulesName[i];
+            formatter: function (params: any) {
+              var triggered =
+                params[0].marker +
+                'triggered rules number: <b>' +
+                params[0].data +
+                '</b><br>';
+              var notTriggered =
+                params[1].marker +
+                'cannot triggered rules number: <b>' +
+                params[1].data +
+                '</b><br>';
+              var cannotTriggeredRules = '&nbsp;&nbsp; cannot triggered rules:';
+              for (let i = 0; i < scene.cannotTriggeredRulesName.length; i++) {
+                cannotTriggeredRules =
+                  cannotTriggeredRules +
+                  '<br>&nbsp;&nbsp;&nbsp;&nbsp;' +
+                  scene.cannotTriggeredRulesName[i];
               }
-              return triggered+notTriggered+cannotTriggeredRules;
-            }
-            
+              return triggered + notTriggered + cannotTriggeredRules;
+            },
           },
-          
+
           legend: {
             x: 'center',
             y: 'bottom',
-            data: ['triggered rules number', 'cannot triggered rules number']
+            data: ['triggered rules number', 'cannot triggered rules number'],
           },
           grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
           },
           yAxis: {
             axisLine: {
@@ -603,186 +617,182 @@ export class SceneService {
               show: false,
             },
             type: 'category',
-            data: [sceneName]
+            data: [sceneName],
           },
           xAxis: {
-            show:false,
-            type: 'value'
+            show: false,
+            type: 'value',
           },
           series: [
             {
               name: 'triggered rules number',
               type: 'bar',
-              barWidth:25,
+              barWidth: 25,
               stack: 'rules',
               label: {
                 normal: {
                   show: true,
-                  position: 'inside'
-                }
+                  position: 'inside',
+                },
               },
-              data: [scene.triggeredRulesName.length]
+              data: [scene.triggeredRulesName.length],
             },
             {
               name: 'cannot triggered rules number',
               type: 'bar',
-              barWidth:25,
+              barWidth: 25,
               stack: 'rules',
               label: {
                 normal: {
                   show: true,
-                  position: 'inside'
-                }
+                  position: 'inside',
+                },
               },
-              data: [scene.cannotTriggeredRulesName.length]
-            }
-          ]
+              data: [scene.cannotTriggeredRulesName.length],
+            },
+          ],
         };
         observer.next(rulesBarOptions);
-    }, 500)
-    })
+      }, 500);
+    });
   }
 
-
   ////////////////////判断两个trigger之间是否存在矛盾//////////////////
-  triggerExistContra(attrVal1:Array<string>,attrVal2:Array<string>):boolean{
-    if(attrVal1[0]===attrVal2[0]){
-      if(attrVal2[1]==="."){
-        if(attrVal2[2]!=attrVal1[2]){
+  triggerExistContra(
+    attrVal1: Array<string>,
+    attrVal2: Array<string>
+  ): boolean {
+    if (attrVal1[0] === attrVal2[0]) {
+      if (attrVal2[1] === '.') {
+        if (attrVal2[2] != attrVal1[2]) {
           /////////////////////都是同一设备状态，但状态不同
           return true;
         }
-      }else {
-        var val1=Number(attrVal1[2]);
-        var val2=Number(attrVal2[2]);
-        if(attrVal1[1]==="="){
-          if(attrVal2[1]==="="){
-            if(attrVal1[2]!=attrVal2[2]){
+      } else {
+        var val1 = Number(attrVal1[2]);
+        var val2 = Number(attrVal2[2]);
+        if (attrVal1[1] === '=') {
+          if (attrVal2[1] === '=') {
+            if (attrVal1[2] != attrVal2[2]) {
               return true;
             }
           }
-          if(attrVal2[1]===">"){
-            if(val2>=val1){
+          if (attrVal2[1] === '>') {
+            if (val2 >= val1) {
               return true;
             }
           }
-          if(attrVal2[1]==="<"){
-            if(val2<=val1){
-              return true;
-            }
-          }
-          
-        }
-        if(attrVal2[1]==="="){
-          if(attrVal1[1]===">"){
-            if(val1>=val2){
-              return true;
-            }
-          }
-          if(attrVal1[1]==="<"){
-            if(val1<=val2){
+          if (attrVal2[1] === '<') {
+            if (val2 <= val1) {
               return true;
             }
           }
         }
-        if(attrVal1[1]===">"){
-          if(attrVal2[1]==="<"){
-            if(val1>=val2){
+        if (attrVal2[1] === '=') {
+          if (attrVal1[1] === '>') {
+            if (val1 >= val2) {
+              return true;
+            }
+          }
+          if (attrVal1[1] === '<') {
+            if (val1 <= val2) {
               return true;
             }
           }
         }
-        if(attrVal1[1]==="<"){
-          if(attrVal2[1]===">"){
-            if(val1<val2){
+        if (attrVal1[1] === '>') {
+          if (attrVal2[1] === '<') {
+            if (val1 >= val2) {
+              return true;
+            }
+          }
+        }
+        if (attrVal1[1] === '<') {
+          if (attrVal2[1] === '>') {
+            if (val1 < val2) {
               return true;
             }
           }
         }
       }
-      
-      
     }
     return false;
   }
-/////////////////trigger解析///////////////////
-  getTriggerAttrVal(trigger:string):Array<string>{
-    var attrVal:Array<string>=[];
-    if(trigger.indexOf("FOR")>0){
-      trigger=trigger.substring(0,trigger.indexOf("FOR"));
+  /////////////////trigger解析///////////////////
+  getTriggerAttrVal(trigger: string): Array<string> {
+    var attrVal: Array<string> = [];
+    if (trigger.indexOf('FOR') > 0) {
+      trigger = trigger.substring(0, trigger.indexOf('FOR'));
     }
-    trigger=trigger.trim();
-    if(trigger.indexOf(">")>0){
-      var attribute="";
-      var valStr="";
-      if(trigger.indexOf(".")>=0){
-        attribute=trigger.substring(trigger.indexOf("."),trigger.indexOf(">")).substring(".".length);
-      }else{
-        attribute=trigger.substring(0,trigger.indexOf(">"));
+    trigger = trigger.trim();
+    if (trigger.indexOf('>') > 0) {
+      var attribute = '';
+      var valStr = '';
+      if (trigger.indexOf('.') >= 0) {
+        attribute = trigger
+          .substring(trigger.indexOf('.'), trigger.indexOf('>'))
+          .substring('.'.length);
+      } else {
+        attribute = trigger.substring(0, trigger.indexOf('>'));
       }
 
-      if(trigger.indexOf("=")>0){
-        valStr=trigger.substring(trigger.indexOf("=")).substring("=".length);	
+      if (trigger.indexOf('=') > 0) {
+        valStr = trigger.substring(trigger.indexOf('=')).substring('='.length);
       }
-      if(trigger.indexOf("=")<0){
-        valStr=trigger.substring(trigger.indexOf(">")).substring(">".length);
+      if (trigger.indexOf('=') < 0) {
+        valStr = trigger.substring(trigger.indexOf('>')).substring('>'.length);
       }
 
       attrVal.push(attribute.trim());
-      attrVal.push(">");
+      attrVal.push('>');
       attrVal.push(valStr.trim());
-
-    }else if(trigger.indexOf("<")>0){
-      var attribute="";
-      var valStr="";
-      if(trigger.indexOf(".")>=0) {
-				attribute=trigger.substring(trigger.indexOf("."), trigger.indexOf("<")).substring(".".length);
-			}else {
-				attribute=trigger.substring(0, trigger.indexOf("<"));
-			}
-			//找到阈值
-			if(trigger.indexOf("=")>0) {
-				valStr=trigger.substring(trigger.indexOf("=")).substring("=".length);
-				
-			}
-			if(trigger.indexOf("=")<0) {
-				valStr=trigger.substring(trigger.indexOf("<")).substring("<".length);
-			}
+    } else if (trigger.indexOf('<') > 0) {
+      var attribute = '';
+      var valStr = '';
+      if (trigger.indexOf('.') >= 0) {
+        attribute = trigger
+          .substring(trigger.indexOf('.'), trigger.indexOf('<'))
+          .substring('.'.length);
+      } else {
+        attribute = trigger.substring(0, trigger.indexOf('<'));
+      }
+      //找到阈值
+      if (trigger.indexOf('=') > 0) {
+        valStr = trigger.substring(trigger.indexOf('=')).substring('='.length);
+      }
+      if (trigger.indexOf('=') < 0) {
+        valStr = trigger.substring(trigger.indexOf('<')).substring('<'.length);
+      }
 
       attrVal.push(attribute.trim());
-      attrVal.push("<");
+      attrVal.push('<');
       attrVal.push(valStr.trim());
-
-    }else if(trigger.indexOf("=")>0){
-      var attribute="";
-      var valStr="";
-      if(trigger.indexOf(".")>=0) {
-				attribute=trigger.substring(trigger.indexOf("."), trigger.indexOf("=")).substring(".".length);
-			}else {
-				attribute=trigger.substring(0, trigger.indexOf("="));
-			}
-			valStr=trigger.substring(trigger.indexOf("=")).substring("=".length);
+    } else if (trigger.indexOf('=') > 0) {
+      var attribute = '';
+      var valStr = '';
+      if (trigger.indexOf('.') >= 0) {
+        attribute = trigger
+          .substring(trigger.indexOf('.'), trigger.indexOf('='))
+          .substring('.'.length);
+      } else {
+        attribute = trigger.substring(0, trigger.indexOf('='));
+      }
+      valStr = trigger.substring(trigger.indexOf('=')).substring('='.length);
 
       attrVal.push(attribute.trim());
-      attrVal.push("=");
+      attrVal.push('=');
       attrVal.push(valStr.trim());
-
-    }else{
-      var device="";
-      var state="";
-      device=trigger.substring(0,trigger.indexOf("."));
-      state=trigger.substring(trigger.indexOf(".")).substring(".".length);
+    } else {
+      var device = '';
+      var state = '';
+      device = trigger.substring(0, trigger.indexOf('.'));
+      state = trigger.substring(trigger.indexOf('.')).substring('.'.length);
 
       attrVal.push(device.trim());
-      attrVal.push(".");
+      attrVal.push('.');
       attrVal.push(state.trim());
-
     }
 
-    return attrVal
+    return attrVal;
   }
-
-
-  
 }
-

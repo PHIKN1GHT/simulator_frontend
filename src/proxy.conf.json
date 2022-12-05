@@ -1,0 +1,14 @@
+{
+  "/visualize/*": {
+    "target": "http://re4cps.org:8082",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/analysis/*": {
+    "target": "http://re4cps.org:8082",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -1,4 +1,4 @@
-export interface RuleScene{
-    ruleName:string,
-    triggeredSceneNum:number,
+export interface RuleScene {
+  ruleName: string;
+  triggeredSceneNum: number;
 }

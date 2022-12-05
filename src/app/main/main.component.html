@@ -1,192 +1,431 @@
 <div class="main">
+  <div id="ontology_rules" class="main_ontology_rules">
+    <div class="up-down">
+      <div class="left-right">
+        <div class="left">
+          <div id="input-taps" [style.display]="isHomePage ? 'block' : 'none'">
+            <!-- 首页：输入TAP规则 -->
+            <h2><b>Please Enter Trigger Action Programs (TAPs):</b></h2>
+            <!-- 输入TAPs -->
+            <textarea
+              class="textarea"
+              placeholder="Please enter TAPs in form of 'IF...THEN...', such as 'IF temperature>30 THEN AirConditioner_0.turn_ac_cool '"
+              [(ngModel)]="ruleText"
+            >
+            </textarea>
 
-    <div id="ontology_rules" class="main_ontology_rules">
-        <div class="up-down">
-            <div class="left-right">
-                <div class="left">
-                    
-                    <div id="input-taps" [style.display]="isHomePage?'block':'none'">
-                        <!-- 首页：输入TAP规则 -->
-                        <h2><b>Please Enter Trigger Action Programs (TAPs):</b></h2>
-                        <!-- 输入TAPs -->
-                        <textarea class="textarea"
-                            placeholder="Please enter TAPs in form of 'IF...THEN...', such as 'IF temperature>30 THEN AirConditioner_0.turn_ac_cool '"
-                            [(ngModel)]="ruleText">
-                        </textarea>
-                        
-    
-                        <!-- <form  method="post" enctype="multipart/form-data" >
+            <!-- <form  method="post" enctype="multipart/form-data" >
                                 <label>choose ontology:</label>
                                 <input type="file" name="file" accept=".xml" class="chooseFile_c"> 
                                 
                                 <input type="submit" class="submit_button"><br>
                                 
                            </form> -->
-    
-    
-                    </div>
-                    <div *ngIf="!isHomePage">
-                        <h2><b>Entered Trigger Action Programs (TAPs):</b></h2>
-                        <div class="textarea">
-                            <div class="scrollbar" style="height: 100%;width: 100%;">
-                                {{ruleTextFinal}}
-                            </div>
-                            
-                        </div>
-                    </div>
+          </div>
+          <div *ngIf="!isHomePage">
+            <h2><b>Entered Trigger Action Programs (TAPs):</b></h2>
+            <div class="textarea">
+              <div class="scrollbar" style="height: 100%; width: 100%">
+                {{ ruleTextFinal }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div
+            id="interactive-result"
+            [style.display]="isHomePage ? 'block' : 'none'"
+          >
+            <!-- 生成交互环境情况，各实例，及个数 -->
+            <h2><b>Results of Automatic Modeling:</b></h2>
+            <div class="analysis-related" style="position: relative">
+              <div *ngIf="interactiveGenerated">
+                <h2><b style="color: cadetblue">Interactive instances:</b></h2>
+                <b
+                  >There are {{ getInteractiveInstanceNum() }} interactive
+                  instances.</b
+                >
+                <div style="height: 80%; width: 95%" class="scrollbar">
+                  <div
+                    *ngIf="
+                      interactiveInstances.humanInstance.instanceName != ''
+                    "
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red">Human instance: &nbsp;</b>
+                    <b>{{ interactiveInstances.humanInstance.instanceName }}</b>
+                  </div>
+                  <div
+                    *ngIf="
+                      interactiveInstances.attributeEntityInstance
+                        .instanceName != ''
+                    "
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red">Attribute entity instance: &nbsp;</b>
+                    <b>{{
+                      interactiveInstances.attributeEntityInstance.instanceName
+                    }}</b>
+                  </div>
+                  <div
+                    *ngIf="
+                      interactiveInstances.uncertainEntityInstances.length > 0
+                    "
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red"
+                      >Uncertainty entity instances ({{
+                        interactiveInstances.uncertainEntityInstances.length
+                      }}):</b
+                    >
+                    <ul
+                      style="
+                        display: flex;
+                        list-style-type: none;
+                        flex-wrap: wrap;
+                        flex-direction: row;
+                      "
+                    >
+                      <li
+                        *ngFor="
+                          let uncertainEntityInstance of interactiveInstances.uncertainEntityInstances;
+                          index as i
+                        "
+                      >
+                        <b style="color: rgb(245, 113, 6)">{{ i + 1 }}.</b>
+                        <b
+                          >{{
+                            uncertainEntityInstance.instanceName
+                          }}&nbsp;&nbsp;</b
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    *ngIf="
+                      interactiveInstances.cyberServiceInstances.length > 0
+                    "
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red"
+                      >Cyber service instances ({{
+                        interactiveInstances.cyberServiceInstances.length
+                      }}):</b
+                    >
+                    <ul
+                      style="
+                        display: flex;
+                        list-style-type: none;
+                        flex-wrap: wrap;
+                        flex-direction: row;
+                      "
+                    >
+                      <li
+                        *ngFor="
+                          let cyberServiceInstance of interactiveInstances.cyberServiceInstances;
+                          index as i
+                        "
+                      >
+                        <b style="color: rgb(245, 113, 6)">{{ i + 1 }}.</b
+                        ><b
+                          >{{
+                            cyberServiceInstance.instanceName
+                          }}&nbsp;&nbsp;</b
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    *ngIf="interactiveInstances.deviceInstances.length > 0"
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red"
+                      >Device instances ({{
+                        interactiveInstances.deviceInstances.length
+                      }}):</b
+                    >
+                    <ul
+                      style="
+                        display: flex;
+                        list-style-type: none;
+                        flex-wrap: wrap;
+                        flex-direction: row;
+                      "
+                    >
+                      <li
+                        *ngFor="
+                          let deviceInstance of interactiveInstances.deviceInstances;
+                          index as i
+                        "
+                      >
+                        <b style="color: rgb(245, 113, 6)">{{ i + 1 }}.</b
+                        ><b>{{ deviceInstance.instanceName }}&nbsp;&nbsp;</b>
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    *ngIf="interactiveInstances.sensorInstances.length > 0"
+                    style="margin-top: 10px"
+                  >
+                    <b style="color: red"
+                      >Sensor instances ({{
+                        interactiveInstances.sensorInstances.length
+                      }}):</b
+                    >
+                    <ul
+                      style="
+                        display: flex;
+                        list-style-type: none;
+                        flex-wrap: wrap;
+                        flex-direction: row;
+                      "
+                    >
+                      <li
+                        *ngFor="
+                          let sensorInstance of interactiveInstances.sensorInstances;
+                          index as i
+                        "
+                      >
+                        <b style="color: rgb(245, 113, 6)">{{ i + 1 }}.</b
+                        ><b>{{ sensorInstance.instanceName }}&nbsp;&nbsp;</b>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-        
-        
-        
-                <div class="right">
-                    <div id="interactive-result" [style.display]="isHomePage?'block':'none'">
-                        <!-- 生成交互环境情况，各实例，及个数 -->
-                        <h2><b>Results of Automatic Modeling:</b></h2>
-                        <div class="analysis-related" style="position: relative;">
-                            <div *ngIf="interactiveGenerated">
-                                <h2><b style="color: cadetblue;">Interactive instances:</b></h2>
-                                <b>There are {{getInteractiveInstanceNum()}} interactive instances.</b>
-                                <div style="height: 80%;width: 95%;" class="scrollbar">
-                                    <div *ngIf="interactiveInstances.humanInstance.instanceName!=''" style="margin-top: 10px;">
-                                        <b style="color:red">Human instance: &nbsp;</b>
-                                        <b >{{interactiveInstances.humanInstance.instanceName}}</b>
-                                    </div>
-                                    <div *ngIf="interactiveInstances.attributeEntityInstance.instanceName!=''" style="margin-top: 10px;">
-                                        <b style="color:red">Attribute entity instance: &nbsp;</b>
-                                        <b >{{interactiveInstances.attributeEntityInstance.instanceName}}</b>
-                                    </div>
-                                    <div *ngIf="interactiveInstances.uncertainEntityInstances.length>0" style="margin-top: 10px;">
-                                        <b style="color:red">Uncertainty entity instances ({{interactiveInstances.uncertainEntityInstances.length}}):</b>
-                                        <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: row;">
-                                            <li *ngFor="let uncertainEntityInstance of interactiveInstances.uncertainEntityInstances;index as i">
-                                                <b style="color: rgb(245, 113, 6);">{{i+1}}.</b> <b>{{uncertainEntityInstance.instanceName}}&nbsp;&nbsp;</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div *ngIf="interactiveInstances.cyberServiceInstances.length>0" style="margin-top: 10px;">
-                                        <b style="color:red">Cyber service instances ({{interactiveInstances.cyberServiceInstances.length}}):</b>
-                                        <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: row;">
-                                            <li *ngFor="let cyberServiceInstance of interactiveInstances.cyberServiceInstances;index as i">
-                                                <b style="color: rgb(245, 113, 6);">{{i+1}}.</b><b >{{cyberServiceInstance.instanceName}}&nbsp;&nbsp;</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div *ngIf="interactiveInstances.deviceInstances.length>0" style="margin-top: 10px;">
-                                        <b style="color:red">Device instances ({{interactiveInstances.deviceInstances.length}}):</b>
-                                        <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: row;">
-                                            <li *ngFor="let deviceInstance of interactiveInstances.deviceInstances;index as i">
-                                                <b style="color: rgb(245, 113, 6);">{{i+1}}.</b><b >{{deviceInstance.instanceName}}&nbsp;&nbsp;</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div *ngIf="interactiveInstances.sensorInstances.length>0" style="margin-top: 10px;">
-                                        <b style="color:red">Sensor instances ({{interactiveInstances.sensorInstances.length}}):</b>
-                                        <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: row;">
-                                            <li *ngFor="let sensorInstance of interactiveInstances.sensorInstances;index as i">
-                                                <b style="color: rgb(245, 113, 6);">{{i+1}}.</b><b >{{sensorInstance.instanceName}}&nbsp;&nbsp;</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isStaticAnalysis">
+            <h2><b>Static Analysis:</b></h2>
+            <div class="analysis-related">
+              <div
+                class="scrollbar"
+                style="width: 100%; height: 100%"
+                *ngIf="showStaticResultOrIFD == 'staticResult'"
+              >
+                <div
+                  *ngIf="staticAnalysisResult.unusedRuleAndReasons.length > 0"
+                >
+                  <b style="color: red; font-size: 20px"
+                    >Unused rules
+                    {{ staticAnalysisResult.unusedRuleAndReasons.length }}:</b
+                  >
+                  <ul
+                    style="
+                      display: flex;
+                      list-style-type: none;
+                      flex-wrap: wrap;
+                      flex-direction: column;
+                    "
+                  >
+                    <li
+                      *ngFor="
+                        let unusedRuleAndReason of staticAnalysisResult.unusedRuleAndReasons
+                      "
+                    >
+                      <b style="color: red">{{
+                        unusedRuleAndReason.unusedRule.ruleName
+                      }}</b
+                      ><b>
+                        :
+                        {{
+                          unusedRuleAndReason.unusedRule.ruleContent
+                        }}&nbsp;&nbsp;</b
+                      >
+                      <br />
+                      <b style="color: red">&nbsp;&nbsp;reason:&nbsp;&nbsp; </b
+                      ><b>{{ unusedRuleAndReason.reason }}</b>
+                    </li>
+                  </ul>
+                </div>
+                <div *ngIf="staticAnalysisResult.redundantRules.length > 0">
+                  <b style="color: red; font-size: 20px"
+                    >Redundant rules
+                    {{ staticAnalysisResult.redundantRules.length }}:</b
+                  >
+                  <ul
+                    style="
+                      display: flex;
+                      list-style-type: none;
+                      flex-wrap: wrap;
+                      flex-direction: column;
+                    "
+                  >
+                    <li
+                      *ngFor="
+                        let redundantRule of staticAnalysisResult.redundantRules
+                      "
+                    >
+                      <b style="color: red">{{ redundantRule[0].ruleName }}</b
+                      ><b>
+                        : {{ redundantRule[0].ruleContent }}&nbsp;&nbsp;
+                        redundant with</b
+                      >
+                      <br />
+                      <ul
+                        style="
+                          display: flex;
+                          list-style-type: none;
+                          flex-wrap: wrap;
+                          flex-direction: column;
+                        "
+                      >
+                        <li *ngFor="let otherRule of redundantRule; index as i">
+                          <b *ngIf="i > 0"
+                            >{{ otherRule.ruleName }} :
+                            {{ otherRule.ruleContent }}</b
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div *ngIf="staticAnalysisResult.loopRules.length > 0">
+                  <b style="color: red; font-size: 20px"
+                    >Loop rules {{ staticAnalysisResult.loopRules.length }}:</b
+                  >
+                  <ul
+                    style="
+                      display: flex;
+                      list-style-type: decimal;
+                      flex-wrap: wrap;
+                      flex-direction: column;
+                    "
+                  >
+                    <li
+                      *ngFor="let loopRules of staticAnalysisResult.loopRules"
+                    >
+                      <ul
+                        style="
+                          display: flex;
+                          list-style-type: none;
+                          flex-wrap: wrap;
+                          flex-direction: column;
+                        "
+                      >
+                        <li *ngFor="let rule of loopRules">
+                          <b style="color: red">{{ rule.ruleName }}</b
+                          ><b> : {{ rule.ruleContent }}</b>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div *ngIf="staticAnalysisResult.cannotOffDevices.length > 0">
+                  <b style="color: red; font-size: 20px"
+                    >Incompleteness
+                    {{ staticAnalysisResult.cannotOffDevices.length }}:</b
+                  >
+                  <ul
+                    style="
+                      display: flex;
+                      list-style-type: none;
+                      flex-wrap: wrap;
+                      flex-direction: column;
+                    "
+                  >
+                    <li
+                      *ngFor="
+                        let cannotOffDevice of staticAnalysisResult.cannotOffDevices
+                      "
+                    >
+                      <b>No rule to turn off&nbsp;</b>
+                      <b style="color: rgb(44, 171, 175)">{{
+                        cannotOffDevice.instanceName
+                      }}</b>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div
+                style="height: 99%; width: 99%"
+                *ngIf="showStaticResultOrIFD == 'ifd'"
+              >
+                <a [href]="pngSrc" target="_blank">
+                  <img [src]="pngSrc" />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isDynamicAnalysis">
+            <h2>
+              <b>Dynamic Analysis:</b>
+              <b *ngIf="analysisTypeValue == '1'" style="margin-left: 20px"
+                >(Internal Analysis)</b
+              >
+              <b *ngIf="analysisTypeValue == '2'" style="margin-left: 20px"
+                >(Single-scenario Analysis)</b
+              >
+            </h2>
+            <div class="analysis-related">
+              <div *ngIf="analysisTypeValue == '1'" class="scenes-scope">
+                <div
+                  class="scenes-scope"
+                  id="all_scenes_tree"
+                  [style.display]="
+                    showGraph === 'scenesTree' ? 'block' : 'none'
+                  "
+                >
+                  <div
+                    class="scenes-scope"
+                    id="scenesTreeid"
+                    class="scenes_tree_scale"
+                    echarts
+                    [options]="scenesTreeOption"
+                  ></div>
+                </div>
+                <div
+                  class="scenes-scope"
+                  id="scenes_rules"
+                  [style.display]="
+                    showGraph === 'scenesRules' ? 'block' : 'none'
+                  "
+                >
+                  <div
+                    class="scenes-scope"
+                    id="scenesRulesBarid"
+                    echarts
+                    [options]="scenesRulesOption"
+                    class="scenes_rules_scale"
+                  ></div>
+                </div>
 
-                        </div>
-                    </div>
-                    <div *ngIf="isStaticAnalysis">
-                        <h2><b>Static Analysis:</b></h2>
-                        <div class="analysis-related">
-                            <div class="scrollbar" style="width: 100%;height: 100%;" *ngIf="showStaticResultOrIFD=='staticResult'">
-                                <div *ngIf="staticAnalysisResult.unusedRuleAndReasons.length>0">
-                                    <b style="color: red;font-size: 20px;">Unused rules {{staticAnalysisResult.unusedRuleAndReasons.length}}:</b>
-                                    <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: column;">
-                                        <li *ngFor="let unusedRuleAndReason of staticAnalysisResult.unusedRuleAndReasons">
-                                            <b style="color: red;">{{unusedRuleAndReason.unusedRule.ruleName}}</b><b > : {{unusedRuleAndReason.unusedRule.ruleContent}}&nbsp;&nbsp;</b>
-                                            <br>
-                                            <b style="color: red;">&nbsp;&nbsp;reason:&nbsp;&nbsp; </b><b>{{unusedRuleAndReason.reason}}</b>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div *ngIf="staticAnalysisResult.redundantRules.length>0">
-                                    <b style="color: red;font-size: 20px;">Redundant rules {{staticAnalysisResult.redundantRules.length}}:</b>
-                                    <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: column;">
-                                        <li *ngFor="let redundantRule of staticAnalysisResult.redundantRules">
-                                            <b style="color: red;">{{redundantRule[0].ruleName}}</b><b > : {{redundantRule[0].ruleContent}}&nbsp;&nbsp; redundant with</b> 
-                                            <br>
-                                            <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: column;">
-                                                <li *ngFor="let otherRule of redundantRule;index as i">
-                                                    <b *ngIf="i>0">{{otherRule.ruleName}} : {{otherRule.ruleContent}}</b> 
-                                                    
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div *ngIf="staticAnalysisResult.loopRules.length>0">
-                                    <b style="color: red;font-size: 20px;">Loop rules {{staticAnalysisResult.loopRules.length}}:</b>
-                                    <ul style="display: flex;list-style-type: decimal;flex-wrap: wrap;flex-direction: column;">
-                                        <li *ngFor="let loopRules of staticAnalysisResult.loopRules">                                            
-                                            <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: column;">
-                                                <li *ngFor="let rule of loopRules">
-                                                    <b style="color: red;">{{rule.ruleName}}</b><b > : {{rule.ruleContent}}</b> 
-                                                    
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div *ngIf="staticAnalysisResult.cannotOffDevices.length>0">
-                                    <b style="color: red;font-size: 20px;">Incompleteness {{staticAnalysisResult.cannotOffDevices.length}}:</b>
-                                    <ul style="display: flex;list-style-type: none;flex-wrap: wrap;flex-direction: column;">
-                                        <li *ngFor="let cannotOffDevice of staticAnalysisResult.cannotOffDevices">
-                                            <b >No rule to turn off&nbsp;</b> <b style="color: rgb(44, 171, 175);">{{cannotOffDevice.instanceName}}</b>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div style="height: 99%;width:99%" *ngIf="showStaticResultOrIFD=='ifd'">
-                                <a [href]="pngSrc" target="_blank">
-                                    <img  [src]="pngSrc"/>
-                                </a>
-                                
-                            </div>
-
-                        </div>
-                        
-                    </div>
-                    <div *ngIf="isDynamicAnalysis">
-                        <h2><b>Dynamic Analysis:</b>
-                            <b *ngIf="analysisTypeValue=='1'" style="margin-left: 20px;">(Internal Analysis)</b>
-                            <b *ngIf="analysisTypeValue=='2'" style="margin-left: 20px;">(Single-scenario Analysis)</b></h2>
-                        <div class="analysis-related">
-                            <div *ngIf="analysisTypeValue=='1'" class="scenes-scope">
-                                <div class="scenes-scope" id="all_scenes_tree" [style.display]="showGraph==='scenesTree'?'block':'none'">
-                                    <div class="scenes-scope" id="scenesTreeid" class="scenes_tree_scale" echarts [options]=scenesTreeOption>
-                                    </div>
-                                </div>
-                                <div class="scenes-scope" id="scenes_rules" [style.display]="showGraph==='scenesRules'?'block':'none'">
-                                    <div class="scenes-scope" id="scenesRulesBarid" echarts [options]="scenesRulesOption" class="scenes_rules_scale">
-                                    </div>
-                                </div>
-            
-                                <div class="scenes-scope" id="rules_scenes" [style.display]="showGraph==='rulesScenes'?'block':'none'">
-                                    <div class="scenes-scope" id="ruleScenesBarid" class="rules_scenes_scale" echarts [options]=rulesScenesOption></div>
-                                </div>
-                                <!-- 多场景 -->
-                            </div>
-                            <div *ngIf="analysisTypeValue=='2'">
-                                <div *ngIf="attributeValues.length>0">
-                                    <h2><b>The initial value of each attribute:</b></h2>
-                                    <ul *ngFor="let attributeValue of attributeValues">
-                                        <li style="list-style-type: none;color: black;">
-                                            <b style="font-size: 15px; color: red;">Attribute:</b>  {{attributeValue[0]}}<b style="font-size: 15px; color: red;">, initial value=</b>{{attributeValue[1]}}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- 单场景 列出每个属性的初始值-->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div id="simulation">
+                <div
+                  class="scenes-scope"
+                  id="rules_scenes"
+                  [style.display]="
+                    showGraph === 'rulesScenes' ? 'block' : 'none'
+                  "
+                >
+                  <div
+                    class="scenes-scope"
+                    id="ruleScenesBarid"
+                    class="rules_scenes_scale"
+                    echarts
+                    [options]="rulesScenesOption"
+                  ></div>
+                </div>
+                <!-- 多场景 -->
+              </div>
+              <div *ngIf="analysisTypeValue == '2'">
+                <div *ngIf="attributeValues.length > 0">
+                  <h2><b>The initial value of each attribute:</b></h2>
+                  <ul *ngFor="let attributeValue of attributeValues">
+                    <li style="list-style-type: none; color: black">
+                      <b style="font-size: 15px; color: red">Attribute:</b>
+                      {{ attributeValue[0]
+                      }}<b style="font-size: 15px; color: red"
+                        >, initial value=</b
+                      >{{ attributeValue[1] }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- 单场景 列出每个属性的初始值-->
+              </div>
+            </div>
+          </div>
+          <!-- <div id="simulation">
                         <h2><b>Simulation Scenes:</b></h2>
                         <div class="random-range">
                             <div class="scenes-scope" id="all_scenes_tree">
@@ -219,7 +458,7 @@
                         </div>
         
                     </div> -->
-                    <!-- <div id="static">
+          <!-- <div id="static">
                         <h2><b>Static Analysis Result:</b></h2>
                         <div class="random-range">
                             <div class="scenes-scope">
@@ -286,92 +525,237 @@
                         </div>
         
                     </div> -->
-                </div>
-            </div>
-            
-            <div class="button-group">
-                <button class="back-button" (click)="backToHomePage()" [style.display]="isHomePage?'none':'block'" style="font-size: 15px;"> 
-                    Home Page
-                </button>
-                <!-- 上传环境本体，生成模型层-->
-                <button class="upload button" [style.display]="isHomePage?'block':'none'">Upload Model Layer
-                    <input class="change" type="file" ng2FileSelect [uploader]="modelUploader"
-                        (change)="modelFileSubmit($event)" />
-                </button>
-                <!-- 上传实例信息文件，生成实例层 -->
-                <button class="upload button" [style.display]="isHomePage?'block':'none'">Upload Instance Information
-                    <input class="change" type="file" ng2FileSelect [uploader]="propertyUploader"
-                        (change)="instanceFileSubmit($event)" />
-                </button>
-                <!-- 自动建模，生成交互环境，给出自动建模的结果 -->
-                <button class="auto_modeling_button" (click)="generateInteractiveEnvironment()" [style.display]="isHomePage?'block':'none'" style="font-size: 15px;">Automatic Modeling</button>
+        </div>
+      </div>
 
+      <div class="button-group">
+        <button
+          class="back-button"
+          (click)="backToHomePage()"
+          [style.display]="isHomePage ? 'none' : 'block'"
+          style="font-size: 15px"
+        >
+          Home Page
+        </button>
+        <!-- 上传环境本体，生成模型层-->
+        <button
+          class="upload button"
+          [style.display]="isHomePage ? 'block' : 'none'"
+        >
+          Upload Model Layer
+          <input
+            class="change"
+            type="file"
+            ng2FileSelect
+            [uploader]="modelUploader"
+            (change)="modelFileSubmit($event)"
+          />
+        </button>
+        <!-- 上传实例信息文件，生成实例层 -->
+        <button
+          class="upload button"
+          [style.display]="isHomePage ? 'block' : 'none'"
+        >
+          Upload Instance Information
+          <input
+            class="change"
+            type="file"
+            ng2FileSelect
+            [uploader]="propertyUploader"
+            (change)="instanceFileSubmit($event)"
+          />
+        </button>
+        <!-- 自动建模，生成交互环境，给出自动建模的结果 -->
+        <button
+          class="auto_modeling_button"
+          (click)="generateInteractiveEnvironment()"
+          [style.display]="isHomePage ? 'block' : 'none'"
+          style="font-size: 15px"
+        >
+          Automatic Modeling
+        </button>
 
-    
-                <button class="button" (click)="staticAnalysis()" [style.display]="(!(isHomePage||isDynamicAnalysis))&&isStaticAnalysis?'none':'block'">Static Analysis</button>
-                <button class="button" (click)="dynamicAnalysis()" [style.display]="(!(isHomePage||isStaticAnalysis))&&isDynamicAnalysis?'none':'block'">Dynamic Analysis</button>
-                <div *ngIf="isDynamicAnalysis" class="simulation_time" style="margin-left: 200px;">
-                    <div style="display: flex; flex-direction: row;">
-                        <label style="color: rgb(43, 42, 42);">Simulation time:
-                        </label>
-                        <input [(ngModel)]="simulationTime" class="simulation_time_input" type="number"
-                                min="100"
-                                oninput="this.value=this.value.replace(/\D/g);if(this.value.length>4)this.value=this.value.slice(0,4)">
-                        <label style="color: rgb(43, 42, 42); margin-left: 1px;">s
-                        </label>
-                    </div>
-                    <div style="display: flex; flex-direction: row;">
-                        <label style="color: rgb(43, 42, 42);">Equivalent time:
-                        </label>
-                        <input [(ngModel)]="equivalentTime" class="simulation_time_input" type="number"
-                                min="0"
-                                oninput="if(this.value.length>4)this.value=this.value.slice(0,4)">
-                        <label style="color: rgb(43, 42, 42); margin-left: 1px;">h
-                        </label>
-                    </div>
-                </div>
-                <div *ngIf="isStaticAnalysis" class="button-group" style="margin-left: 780px; position: absolute;">
-                    <button class="button" (click)="displayStaticAnalysisResults()" [style.display]="isStaticAnalysis?'block':'none'">Display Analysis Results</button>
-                    <button class="button" (click)="displayIFD()" [style.display]="isStaticAnalysis?'block':'none'">Display IFD</button>
-                </div>
-                <div *ngIf="isDynamicAnalysis" class="button-group" style="margin-left: 780px; position: absolute;">
-                    <select id="selectType" class="select_form" [(ngModel)]="analysisTypeValue" (ngModelChange)="selectAnalysisType()" >
-                        <option value="0" selected="selected">--select analysis type--</option>
-                        <option value="1"  >Internal Anlaysis</option>
-                        <option value="2" >Single-scenario Analysis</option>
-                    </select>
-                    <div class="button-group" *ngIf="analysisTypeValue=='1'">
-                        <button class="button" (click)="generateMultipeScenarios()">Generate Scenarios</button>
-                        <button class="button" style="width: fit-content;" (click)="simulateMultiScenarios()">Simulte</button>
-                        <button class="button" (click)="displayScenarioTreeGraph()">Display Scenario-tree Graph</button>
-                        <!-- <button class="button">Display Rule-scenario Graph</button>
+        <button
+          class="button"
+          (click)="staticAnalysis()"
+          [style.display]="
+            !(isHomePage || isDynamicAnalysis) && isStaticAnalysis
+              ? 'none'
+              : 'block'
+          "
+        >
+          Static Analysis
+        </button>
+        <button
+          class="button"
+          (click)="dynamicAnalysis()"
+          [style.display]="
+            !(isHomePage || isStaticAnalysis) && isDynamicAnalysis
+              ? 'none'
+              : 'block'
+          "
+        >
+          Dynamic Analysis
+        </button>
+        <div
+          *ngIf="isDynamicAnalysis"
+          class="simulation_time"
+          style="margin-left: 200px"
+        >
+          <div style="display: flex; flex-direction: row">
+            <label style="color: rgb(43, 42, 42)">Simulation time: </label>
+            <input
+              [(ngModel)]="simulationTime"
+              class="simulation_time_input"
+              type="number"
+              min="100"
+              oninput="this.value=this.value.replace(/\D/g);if(this.value.length>4)this.value=this.value.slice(0,4)"
+            />
+            <label style="color: rgb(43, 42, 42); margin-left: 1px">s </label>
+          </div>
+          <div style="display: flex; flex-direction: row">
+            <label style="color: rgb(43, 42, 42)">Equivalent time: </label>
+            <input
+              [(ngModel)]="equivalentTime"
+              class="simulation_time_input"
+              type="number"
+              min="0"
+              oninput="if(this.value.length>4)this.value=this.value.slice(0,4)"
+            />
+            <label style="color: rgb(43, 42, 42); margin-left: 1px">h </label>
+          </div>
+        </div>
+        <div
+          *ngIf="isStaticAnalysis"
+          class="button-group"
+          style="margin-left: 780px; position: absolute"
+        >
+          <button
+            class="button"
+            (click)="displayStaticAnalysisResults()"
+            [style.display]="isStaticAnalysis ? 'block' : 'none'"
+          >
+            Display Analysis Results
+          </button>
+          <button
+            class="button"
+            (click)="displayIFD()"
+            [style.display]="isStaticAnalysis ? 'block' : 'none'"
+          >
+            Display IFD
+          </button>
+        </div>
+        <div
+          *ngIf="isDynamicAnalysis"
+          class="button-group"
+          style="margin-left: 780px; position: absolute"
+        >
+          <select
+            id="selectType"
+            class="select_form"
+            [(ngModel)]="analysisTypeValue"
+            (ngModelChange)="selectAnalysisType()"
+          >
+            <option value="0" selected="selected">
+              --select analysis type--
+            </option>
+            <option value="1">Internal Anlaysis</option>
+            <option value="2">Single-scenario Analysis</option>
+          </select>
+          <div class="button-group" *ngIf="analysisTypeValue == '1'">
+            <button class="button" (click)="generateMultipeScenarios()">
+              Generate Scenarios
+            </button>
+            <button
+              class="button"
+              style="width: fit-content"
+              (click)="simulateMultiScenarios()"
+            >
+              Simulte
+            </button>
+            <button class="button" (click)="displayScenarioTreeGraph()">
+              Display Scenario-tree Graph
+            </button>
+            <!-- <button class="button">Display Rule-scenario Graph</button>
                         <button class="button">Displey Scenario-rule Graph</button> -->
-                        <button class="button" style="width: fit-content;" (click)="verifyPropertis()">Verify properties</button>
-                    </div>
-                    <div class="button-group" *ngIf="analysisTypeValue=='2'" style="margin-left: 10px;margin-top: 0px;">
-                        <div style="flex-direction: column;">
-                            <label style="color: rgb(43, 42, 42); margin-top: 0px;margin-left: 0px;">Set the initial value of each attribute:
-                            </label>
-                            <div style="flex-direction: row;">
-                                <select id="selectAttribute" class="select_form" [(ngModel)]="selectAttributeName" style="margin-top: 0px;">
-                                    <option value="0" selected="selected">--select attribute--</option>
-                                    <option  *ngFor="let attributeName of attributeNames" [value]="attributeName">{{attributeName}}</option>
-                                    
-                                </select>
-                                <input [(ngModel)]="setAttributeValue" class="simulation_time_input" type="number" style="width: 55px;margin-top: 0px;height: 25px;"
-                                    oninput="if(this.value.length>4)this.value=this.value.slice(0,6)">
-                                <button  class="button" style="width: fit-content;height: fit-content;margin-left: 5px;" (click)="addAttributeValue()">
-                                    Add
-                                </button>
-                            </div>
-                        </div>
-                        <button class="button" (click)="generateSingleScenario()">Generate Scenario</button>
-                        <button class="button" (click)="generateBestScenario()">Generate the Best Scenario</button>
-                        <button class="button" style="width: fit-content;"  (click)="simulateSingleScenario()">Simulte</button>
-                        <button class="button" (click)="getScenarioAnalysisResult()">Single Scenario Analysis</button>
-                    </div>
-                </div>
-                <!-- <button class="analys_button" (click)="getStaticAnalysisResult()">Static Analysis</button>
+            <button
+              class="button"
+              style="width: fit-content"
+              (click)="verifyPropertis()"
+            >
+              Verify properties
+            </button>
+          </div>
+          <div
+            class="button-group"
+            *ngIf="analysisTypeValue == '2'"
+            style="margin-left: 10px; margin-top: 0px"
+          >
+            <div style="flex-direction: column">
+              <label
+                style="
+                  color: rgb(43, 42, 42);
+                  margin-top: 0px;
+                  margin-left: 0px;
+                "
+                >Set the initial value of each attribute:
+              </label>
+              <div style="flex-direction: row">
+                <select
+                  id="selectAttribute"
+                  class="select_form"
+                  [(ngModel)]="selectAttributeName"
+                  style="margin-top: 0px"
+                >
+                  <option value="0" selected="selected">
+                    --select attribute--
+                  </option>
+                  <option
+                    *ngFor="let attributeName of attributeNames"
+                    [value]="attributeName"
+                  >
+                    {{ attributeName }}
+                  </option>
+                </select>
+                <input
+                  [(ngModel)]="setAttributeValue"
+                  class="simulation_time_input"
+                  type="number"
+                  style="width: 55px; margin-top: 0px; height: 25px"
+                  oninput="if(this.value.length>4)this.value=this.value.slice(0,6)"
+                />
+                <button
+                  class="button"
+                  style="
+                    width: fit-content;
+                    height: fit-content;
+                    margin-left: 5px;
+                  "
+                  (click)="addAttributeValue()"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+            <button class="button" (click)="generateSingleScenario()">
+              Generate Scenario
+            </button>
+            <button class="button" (click)="generateBestScenario()">
+              Generate the Best Scenario
+            </button>
+            <button
+              class="button"
+              style="width: fit-content"
+              (click)="simulateSingleScenario()"
+            >
+              Simulte
+            </button>
+            <button class="button" (click)="getScenarioAnalysisResult()">
+              Single Scenario Analysis
+            </button>
+          </div>
+        </div>
+        <!-- <button class="analys_button" (click)="getStaticAnalysisResult()">Static Analysis</button>
                 <div class="simulation_time">
                     <label style="color: rgb(43, 42, 42);">simulation time:
                         <input [(ngModel)]="simulationTime" class="simulation_time_input" type="number"
@@ -382,15 +766,7 @@
                 </div>
                 <button class="analys_button" (click)="generateAllSystemModels()">Generate Models</button>
                 <button class="analys_button" (click)="scenariosSimulation()">Simulate</button> -->
-            </div>
-        </div>
-        
-
+      </div>
     </div>
-
-
-
-
-
-
+  </div>
 </div>

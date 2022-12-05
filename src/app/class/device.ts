@@ -1,4 +1,4 @@
-export interface Device{
-    deviceName: string,
-    timeValues: any
+export interface Device {
+  deviceName: string;
+  timeValues: any;
 }

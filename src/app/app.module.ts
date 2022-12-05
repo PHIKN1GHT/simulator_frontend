@@ -8,21 +8,23 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { MainComponent } from './main/main.component';
 import { IfdPlanComponent } from './ifd-plan/ifd-plan.component';
 
-import {NgxEchartsModule } from 'ngx-echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { FormsModule } from '@angular/forms';
 import { SceneDetailsComponent } from './scene-details/scene-details.component';
 
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { HttpClientModule } from '@angular/common/http';
-import { MonacoConfig } from "./monaco-config";
+import { MonacoConfig } from './monaco-config';
 import { MainData } from './provider/main-data';
 import { RuleAnalysisComponent } from './rule-analysis/rule-analysis.component';
 import { RuleRecursiveComponent } from './rule-recursive/rule-recursive.component';
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: '../assets', // configure base path for monaco editor default: './assets'
   defaultOptions: { scrollBeyondLastLine: false }, // pass default options to be used
-  onMonacoLoad: () => { console.log((<any>window).monaco); } // here monaco object will be available as window.monaco use this function to extend monaco editor functionalities.
+  onMonacoLoad: () => {
+    console.log((<any>window).monaco);
+  }, // here monaco object will be available as window.monaco use this function to extend monaco editor functionalities.
 };
 
 @NgModule({
@@ -34,7 +36,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     DeviceDetailsComponent,
     SceneDetailsComponent,
     RuleAnalysisComponent,
-    RuleRecursiveComponent
+    RuleRecursiveComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,10 +48,9 @@ const monacoConfig: NgxMonacoEditorConfig = {
     // MonacoEditorModule.forRoot(),
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
-    })
-    
+    }),
   ],
   providers: [MainData],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

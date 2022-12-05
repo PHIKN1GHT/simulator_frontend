@@ -1,40 +1,41 @@
-import { NgxMonacoEditorConfig } from "ngx-monaco-editor";
+import { NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 
 export const MonacoConfig: NgxMonacoEditorConfig = {
-  baseUrl: "assets", // configure base path for monaco editor
+  baseUrl: 'assets', // configure base path for monaco editor
   defaultOptions: { scrollBeyondLastLine: false }, // pass default options to be used
-  onMonacoLoad: monacoOnLoad
+  onMonacoLoad: monacoOnLoad,
 };
 
 export function monacoOnLoad() {
   // here monaco object will be available as window.monaco use this function to extend monaco editor functionalities.
   // register Monaco languages
-  var monaco=(<any>window).monaco;
-  console.log(monaco)
+  var monaco = (<any>window).monaco;
+  console.log(monaco);
   monaco.languages.register({
-    id: "req",
-    aliases: ["Req", "req", "req"],
-    extensions: [".req"],
-    mimetypes: ["text/req"]
+    id: 'req',
+    aliases: ['Req', 'req', 'req'],
+    extensions: ['.req'],
+    mimetypes: ['text/req'],
   });
   monaco.languages.setMonarchTokensProvider('req', {
     tokenizer: {
       root: [
-        [/SHOULD|ALWAYS|BE|ACTIVE|NEVER|HAPPEN|OCCUR|TOGETHER|IF|THEN|FOR|PREFERRED|IS|AND|OR|ABOVE|BELOW/, "req-key"],
-      ]
-    }
+        [
+          /SHOULD|ALWAYS|BE|ACTIVE|NEVER|HAPPEN|OCCUR|TOGETHER|IF|THEN|FOR|PREFERRED|IS|AND|OR|ABOVE|BELOW/,
+          'req-key',
+        ],
+      ],
+    },
   });
   monaco.editor.defineTheme('reqTheme', {
     base: 'vs',
     inherit: false,
-    rules: [
-      { token: 'req-key', foreground: '4B0082' },
-    ],
+    rules: [{ token: 'req-key', foreground: '4B0082' }],
     colors: {
       // 'editor.background':'#f4f4f4',
-      'editorLineNumber.foreground':'#222222',
-      'editor.lineHighlightBackground':'#f4f4f4',
-    }
+      'editorLineNumber.foreground': '#222222',
+      'editor.lineHighlightBackground': '#f4f4f4',
+    },
   });
   // monaco.languages.register({
   //     id: 'json',

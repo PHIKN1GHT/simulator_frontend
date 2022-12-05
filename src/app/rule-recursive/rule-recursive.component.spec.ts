@@ -8,9 +8,8 @@ describe('RuleRecursiveComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RuleRecursiveComponent ]
-    })
-    .compileComponents();
+      declarations: [RuleRecursiveComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

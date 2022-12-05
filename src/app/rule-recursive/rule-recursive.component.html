@@ -6,11 +6,14 @@
     </li>
 </ul> -->
 
-<ul style="color: black;">
-    <b style="color: cornflowerblue;">Prerequisite rules:</b>
-    <li *ngFor="let preRule of preRules" >
-        <b style="color: red;">{{preRule.currentRule.ruleName}}&nbsp;</b>
-        <b style="color: black;">{{preRule.currentRule.ruleContent}}&nbsp;</b>        
-        <app-rule-recursive *ngIf="preRule.preRules.length>0" [preRules]="preRule.preRules" ></app-rule-recursive>
-    </li>
+<ul style="color: black">
+  <b style="color: cornflowerblue">Prerequisite rules:</b>
+  <li *ngFor="let preRule of preRules">
+    <b style="color: red">{{ preRule.currentRule.ruleName }}&nbsp;</b>
+    <b style="color: black">{{ preRule.currentRule.ruleContent }}&nbsp;</b>
+    <app-rule-recursive
+      *ngIf="preRule.preRules.length > 0"
+      [preRules]="preRule.preRules"
+    ></app-rule-recursive>
+  </li>
 </ul>

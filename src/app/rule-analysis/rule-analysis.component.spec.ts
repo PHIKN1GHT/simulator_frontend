@@ -8,9 +8,8 @@ describe('RuleAnalysisComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RuleAnalysisComponent ]
-    })
-    .compileComponents();
+      declarations: [RuleAnalysisComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

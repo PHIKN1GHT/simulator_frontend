@@ -1,20 +1,25 @@
 import { Injectable } from '@angular/core';
-import {HttpClient,HttpParams, HttpHeaders, HttpRequest, HttpEvent} from '@angular/common/http';
-import {Observable} from "rxjs";
-import {FileUploader} from 'ng2-file-upload';
+import {
+  HttpClient,
+  HttpParams,
+  HttpHeaders,
+  HttpRequest,
+  HttpEvent,
+} from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { FileUploader } from 'ng2-file-upload';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UploadFileService {
-
   public uploader: FileUploader = new FileUploader({
     url: 'http://47.52.116.116:8083/analysis/upload',
     method: 'POST',
-    itemAlias: 'file'
+    itemAlias: 'file',
   });
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   // uploadFile(file:File):Observable<HttpEvent<any>>{
   //   let formData=new FormData();

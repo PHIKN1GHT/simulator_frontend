@@ -19,6 +19,8 @@ import { MonacoConfig } from './monaco-config';
 import { MainData } from './provider/main-data';
 import { RuleAnalysisComponent } from './rule-analysis/rule-analysis.component';
 import { RuleRecursiveComponent } from './rule-recursive/rule-recursive.component';
+import { SafePipe } from './visualize/safe.pipe';
+import { VisualizeComponent } from './visualize/visualize.component';
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: '../assets', // configure base path for monaco editor default: './assets'
   defaultOptions: { scrollBeyondLastLine: false }, // pass default options to be used
@@ -37,6 +39,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     SceneDetailsComponent,
     RuleAnalysisComponent,
     RuleRecursiveComponent,
+    VisualizeComponent,
+    SafePipe,
   ],
   imports: [
     BrowserModule,

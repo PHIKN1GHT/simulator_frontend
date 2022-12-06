@@ -575,7 +575,7 @@
           Automatic Modeling
         </button>
 
-        <button
+        <!-- <button
           class="button"
           (click)="staticAnalysis()"
           [style.display]="
@@ -585,7 +585,7 @@
           "
         >
           Static Analysis
-        </button>
+        </button> -->
         <button
           class="button"
           (click)="dynamicAnalysis()"
@@ -600,7 +600,7 @@
         <div
           *ngIf="isDynamicAnalysis"
           class="simulation_time"
-          style="margin-left: 200px"
+          style="margin-left: 20px"
         >
           <div style="display: flex; flex-direction: row">
             <label style="color: rgb(43, 42, 42)">Simulation time: </label>
@@ -628,7 +628,7 @@
         <div
           *ngIf="isStaticAnalysis"
           class="button-group"
-          style="margin-left: 780px; position: absolute"
+          style="margin-left: 80px; position: absolute"
         >
           <button
             class="button"
@@ -648,7 +648,7 @@
         <div
           *ngIf="isDynamicAnalysis"
           class="button-group"
-          style="margin-left: 780px; position: absolute"
+          style="margin-left: 340px; position: absolute"
         >
           <select
             id="selectType"
@@ -742,6 +742,9 @@
             </button>
             <button class="button" (click)="generateBestScenario()">
               Generate the Best Scenario
+            </button>
+            <button class="button" (click)="visualizeResult()">
+              Visualize
             </button>
             <button
               class="button"

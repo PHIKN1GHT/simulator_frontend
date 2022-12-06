@@ -4,6 +4,7 @@ import { MainComponent } from './main/main.component';
 import { IfdPlanComponent } from './ifd-plan/ifd-plan.component';
 import { SceneDetailsComponent } from './scene-details/scene-details.component';
 import { RuleAnalysisComponent } from './rule-analysis/rule-analysis.component';
+import { VisualizeComponent } from './visualize/visualize.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/main', pathMatch: 'full' },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'scene-details', component: SceneDetailsComponent },
   { path: 'scene-details/:id', component: SceneDetailsComponent },
   { path: 'rule-analysis', component: RuleAnalysisComponent },
+  { path: 'visualizer-frontend', component: VisualizeComponent },
 ];
 
 @NgModule({

@@ -1,0 +1,30 @@
+<div class="main">
+  <div id="ontology_rules" class="main_ontology_rules">
+    <div class="up-down">
+      <div class="left-right">
+        <div class="left">
+          <div id="input-taps" [style.display]="'block'">
+            <h2><b>Simulation Result and Path Trace:</b></h2>
+            <div class="textarea">
+              {{ simulationResult }}
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div id="interactive-result" [style.display]="'block'">
+            <h2><b>Visualization:</b></h2>
+            <div class="textarea">
+              <div class="scrollbar" style="height: 100%; width: 100%">
+                <iframe
+                  [src]="visualizerUrl | safe"
+                  style="height: 100%; width: 100%"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

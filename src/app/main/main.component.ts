@@ -13,12 +13,10 @@ import * as $ from 'jquery';
 import { InstanceLayer } from '../class/instance';
 import { Rule, StaticAnalysisResult } from '../class/rule';
 import { ModelGenerateService } from '../service/model-generate.service';
-import { DataTimeValue, Scenario, ScenesTree } from '../class/simulation';
-import { data } from 'jquery';
-import { from } from 'rxjs';
-import { InteractiveLayerAndRules } from '../class/output-style';
+import { Scenario, ScenesTree } from '../class/simulation';
 import SERVER_ADDR from '../service/address';
 
+export let lastGenrated: 'best' | 'single' | null = null;
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -757,6 +755,7 @@ export class MainComponent implements OnInit {
         .subscribe((singleModelFileName) => {
           console.log(singleModelFileName);
           this.singleModelFileName = singleModelFileName[0];
+          lastGenrated = 'single';
         });
     }
   }
@@ -783,6 +782,7 @@ export class MainComponent implements OnInit {
           console.log(bestScenario);
           this.attributeValues = bestScenario.attributeValues;
           this.singleModelFileName = bestScenario.bestScenarioFileName;
+          lastGenrated = 'best';
         });
     }
   }
@@ -881,6 +881,10 @@ export class MainComponent implements OnInit {
   ////跳转到单场景分析界面
   getScenarioAnalysisResult() {
     this.goToSingleScenarioAnalysis(this.singleScenario);
+  }
+
+  visualizeResult() {
+    this.router.navigate(['visualizer-frontend']);
   }
 
   ////跳转到单场景分析界面,并记住各属性取值
